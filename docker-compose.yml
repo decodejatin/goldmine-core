@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    container_name: goldmine-tsdb
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./data/influxdb:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=goldmine_admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=goldmine_secure_pass123
+      - DOCKER_INFLUXDB_INIT_ORG=goldmine_quant
+      - DOCKER_INFLUXDB_INIT_BUCKET=tick_data
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=goldmine_super_secret_token_99
+    networks:
+      - goldmine-net
+
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: goldmine-grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - goldmine-net
+
+networks:
+  goldmine-net:
+    driver: bridge
