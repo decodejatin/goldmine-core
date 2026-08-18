@@ -1,0 +1,15 @@
+brain/
+ingest/
+gateway/
+config/
+backtester/
+tsdb_dumper/
+orchestrator/
+risk_server/
+build/
+venv/
+__pycache__/
+*.db*
+*.parquet
+.env
+a.out
